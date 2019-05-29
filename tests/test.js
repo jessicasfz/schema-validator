@@ -7,9 +7,9 @@ var schema = {
         'constraints': {
             'required': true,
             'type': 'string',
-            'pattern': '[a-zA-Z]*',
+            'pattern': '[abc]+',
             'nullable': false,
-            'minLength': 3,
+            'minLength': 2,
             'maxLength': 3
         }
     }, {
@@ -38,10 +38,18 @@ var schema = {
     }
     ]
 };
-// let validtor = new SchemaValidator(schema);
-// console.log("validator Generated ")
-// console.log(validtor.validate(["AED",6.7,"XYZ"]));
-const moment = require("moment")
-var date = moment("01-13-10","YYYY-MM-DD");
-console.log(date.isValid())
-console.log(date.year())
+let validtor = new SchemaValidator(schema);
+console.log("validator Generated ")
+var result = validtor.validate(["AEDe","ahsd","25:11:11"]);
+console.log("validation result = ",result)
+// const moment = require("moment")
+// var date = moment("01-13-10","YYYY-MM-DD");
+// console.log(date.isValid())
+// console.log(date.year())
+
+var records = [",,,,,,",",,,,,"]
+var v = new SchemaValidator(schema);
+for(i=0 ; i<records.length; i++){
+    var singleRecord = records[i].split(",");
+    v.validate(singleRecord);
+}
