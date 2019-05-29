@@ -1,0 +1,31 @@
+let dataType = {
+    'integer':{
+        type:"integer"
+    },
+    'number':{
+        type:"number"
+    },
+    "boolean":{
+        type:"boolean"
+    },
+    "date":{
+        type:"string",
+        format:"date"
+    },
+    "string":{
+        type:"string"
+    },
+    "time":{
+        type:"string",
+        format:"time"
+    },
+    "date-time":{
+        type:"string",
+        format:"date-time"
+    },
+    "email":{
+        type:"string",
+        format:"email"
+    }
+}
+module.exports = dataType;
