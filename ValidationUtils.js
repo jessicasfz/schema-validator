@@ -32,9 +32,9 @@ class ValidationUtils {
     if ("date" === fieldConstraint.constraints.type) {
       let date = moment(data, fieldConstraint.constraints.pattern);
       //  console.log("Validating Date format =" + date.isValid());
-      if(!date.isValid()){
+      if (!date.isValid()) {
         return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
-        fieldConstraint.constraints.type, data);
+          fieldConstraint.constraints.type, data);
       }
     } else if ("string" === fieldConstraint.constraints.type) {
       if (fieldConstraint.constraints.maxLength > 0) {
@@ -49,28 +49,29 @@ class ValidationUtils {
       let result = schemaValidator.validate(singleValueSchema, data);
       if (!result) {
         console.log(schemaValidator.errors);
-        return new SingleError(data + " " + schemaValidator.errors[0].message, fieldConstraint.constraints.type, data);
+
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
       }
     }
-    else if( "time" == fieldConstraint.constraints.type){
-      var date = dateTimeFormat.parse(data,fieldConstraint.constraints.pattern);
-      if(!date){
+    else if ("time" == fieldConstraint.constraints.type) {
+      var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern);
+      if (!date) {  
         return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
-        fieldConstraint.constraints.type, data);
+          fieldConstraint.constraints.type, data);
       }
     }
     else if ("number" === fieldConstraint.constraints.type) {
       let result = schemaValidator.validate(singleValueSchema, data);
       if (!result) {
         // console.log(schemaValidator.errors);
-        return new SingleError(data + " " + schemaValidator.errors[0].message, fieldConstraint.constraints.type, data);
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
       }
     }
     else {
       let result = schemaValidator.validate(singleValueSchema, data);
       if (!result) {
         // console.log(schemaValidator.errors);
-        return new SingleError(data + " " + schemaValidator.errors[0].message, fieldConstraint.constraints.type, data);
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
       }
     }
     return true;
@@ -84,10 +85,21 @@ class ValidationUtils {
   static validateSchemaForJSD(schema, valueJSON) {
     let schemaValidator = new Ajv({ allErrors: true });
     var check = schemaValidator.validate(schema, valueJSON);
-    return{
-      status:check,
-      errors:schemaValidator.errors
+    return {
+      status: check,
+      errors: schemaValidator.errors
     }
+  }
+
+  static getAllErrorObject(errors) {
+    var errString = [];
+    for (var i = 0; i < errors.length; i++) {
+      errString.push(errors[i].message) ;
+    }
+    if(1 === errors.length ){
+      return errString[0];
+    }
+    return JSON.stringify(errString);
   }
 }
 module.exports = ValidationUtils;
