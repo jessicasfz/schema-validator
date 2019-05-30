@@ -1,4 +1,5 @@
 //var ValidationUtils = require('../SchemaValidator');
+//var expect = require("chai").expect;
 var SchemaValidator = require('../SchemaValidator');
 var schema = {
     'fields': [{
@@ -38,18 +39,21 @@ var schema = {
     }
     ]
 };
-let validtor = new SchemaValidator(schema);
-console.log("validator Generated ")
-var result = validtor.validate(["AEDe","ahsd","25:11:11"]);
-console.log("validation result = ",result)
+
+
+// let validtor = new SchemaValidator(schema);
+// console.log("validator Generated ")
+// var result = validtor.validate(["AEDe","ahsd","25:11:11"]);
+// console.log("validation result = ",result)
+
 // const moment = require("moment")
 // var date = moment("01-13-10","YYYY-MM-DD");
 // console.log(date.isValid())
 // console.log(date.year())
 
-var records = [",,,,,,",",,,,,"]
-var v = new SchemaValidator(schema);
-for(i=0 ; i<records.length; i++){
-    var singleRecord = records[i].split(",");
-    v.validate(singleRecord);
-}
+describe('To verify if the correct schema',function(){
+    it("To verify if currency and rates json  is as per the correct schema",function(){
+       
+        expect(schema).toHaveProperty('name');
+    })
+})
