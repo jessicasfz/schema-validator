@@ -65,7 +65,7 @@ class SchemaValidator {
 	 * @param {*} valueJSON 
 	 */
 	static validateRawSchema(schema, valueJSON) {
-
+		return ValidationUtils.validateSchemaForJSD(schema,valueJSON)
 	}
 
 }

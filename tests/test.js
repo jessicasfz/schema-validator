@@ -35,21 +35,37 @@ var schema = {
             'minLength': 1,
             'maxLength': 20
         }
+    },
+    {
+        'name': 'time',
+        'title': 'Date of transaction',
+        'constraints': {
+            'required': true,
+            'type': 'time',
+            'pattern': 'hh:mm:ss',
+            'nullable': false,
+            'minLength': 1,
+            'maxLength': 20
+        }
     }
     ]
 };
-let validtor = new SchemaValidator(schema);
-console.log("validator Generated ")
-var result = validtor.validate(["AEDe","ahsd","25:11:11"]);
-console.log("validation result = ",result)
+// let validtor = new SchemaValidator(schema);
+// console.log("validator Generated ")
+// var result = validtor.validate(["AEDe","ahsd","2017-01-01"]);
+// console.log("validation result = ",result)
 // const moment = require("moment")
 // var date = moment("01-13-10","YYYY-MM-DD");
 // console.log(date.isValid())
 // console.log(date.year())
 
-var records = [",,,,,,",",,,,,"]
-var v = new SchemaValidator(schema);
-for(i=0 ; i<records.length; i++){
-    var singleRecord = records[i].split(",");
-    v.validate(singleRecord);
+var dateFormat = require('date-and-time');
+var date = dateFormat.parse("24:59:59","hh:mm:ss");
+console.log(date);
+if(date){
+    console.log("Valida td")
+}
+else{
+    console.log("Not Sucess ");
+    
 }
