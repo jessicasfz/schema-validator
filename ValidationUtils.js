@@ -1,6 +1,7 @@
 const dataTypes = require('./Datatypes')
 let moment = require('moment');
 var Ajv = require('ajv');
+let dateTimeFormat = require('date-and-time');
 var validSchema = require('./config/schema-config.json');
 const SingleError = require('./SingleError')
 class ValidationUtils {
@@ -9,7 +10,7 @@ class ValidationUtils {
    * @description  validayes Schema 
    */
   static validateSchema(schema) {
-    let schemaValidator = new Ajv();
+    let schemaValidator = new Ajv({ allErrors: true });
     let result = schemaValidator.validate(validSchema, schema);
     if (!result) {
       if (schemaValidator.errors && schemaValidator.errors.length > 0) {
@@ -27,35 +28,50 @@ class ValidationUtils {
     //console.log(dataType)
 
     let singleValueSchema = dataType;
-    let schemaValidator = new Ajv();
+    let schemaValidator = new Ajv({ allErrors: true });
     if ("date" === fieldConstraint.constraints.type) {
       let date = moment(data, fieldConstraint.constraints.pattern);
-    //  console.log("Validating Date format =" + date.isValid());
-      return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
-        fieldConstraint.constraints.type, data);
-    } else if ("time" === fieldConstraint.constraints.type) {
-
-    } else if("string" === fieldConstraint.constraints.type){
-      if(fieldConstraint.constraints.maxLength>0){
-        singleValueSchema.maxLength= fieldConstraint.constraints.maxLength;
+      //  console.log("Validating Date format =" + date.isValid());
+      if (!date.isValid()) {
+        return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
+          fieldConstraint.constraints.type, data);
       }
-      if(fieldConstraint.constraints.minLength>0){
-        singleValueSchema.minLength= fieldConstraint.constraints.minLength;
+    } else if ("string" === fieldConstraint.constraints.type) {
+      if (fieldConstraint.constraints.maxLength > 0) {
+        singleValueSchema.maxLength = fieldConstraint.constraints.maxLength;
       }
-      if(fieldConstraint.constraints.pattern.trim().length >0 ){
-        singleValueSchema.pattern= fieldConstraint.constraints.pattern;
+      if (fieldConstraint.constraints.minLength > 0) {
+        singleValueSchema.minLength = fieldConstraint.constraints.minLength;
+      }
+      if (fieldConstraint.constraints.pattern.trim().length > 0) {
+        singleValueSchema.pattern = fieldConstraint.constraints.pattern;
       }
       let result = schemaValidator.validate(singleValueSchema, data);
       if (!result) {
         console.log(schemaValidator.errors);
-        return new SingleError(data+" "+schemaValidator.errors[0].message,fieldConstraint.constraints.type,data);
+
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
       }
     }
-     else {
+    else if ("time" == fieldConstraint.constraints.type) {
+      var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern);
+      if (!date) {  
+        return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
+          fieldConstraint.constraints.type, data);
+      }
+    }
+    else if ("number" === fieldConstraint.constraints.type) {
       let result = schemaValidator.validate(singleValueSchema, data);
       if (!result) {
-       // console.log(schemaValidator.errors);
-        return new SingleError(data+" "+schemaValidator.errors[0].message,fieldConstraint.constraints.type,data);
+        // console.log(schemaValidator.errors);
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
+      }
+    }
+    else {
+      let result = schemaValidator.validate(singleValueSchema, data);
+      if (!result) {
+        // console.log(schemaValidator.errors);
+        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
       }
     }
     return true;
@@ -67,8 +83,23 @@ class ValidationUtils {
    * @param {*} valueJSON -- json for which above schema is presenst 
    */
   static validateSchemaForJSD(schema, valueJSON) {
-    let schemaValidator = new Ajv();
+    let schemaValidator = new Ajv({ allErrors: true });
     var check = schemaValidator.validate(schema, valueJSON);
+    return {
+      status: check,
+      errors: schemaValidator.errors
+    }
+  }
+
+  static getAllErrorObject(errors) {
+    var errString = [];
+    for (var i = 0; i < errors.length; i++) {
+      errString.push(errors[i].message) ;
+    }
+    if(1 === errors.length ){
+      return errString[0];
+    }
+    return JSON.stringify(errString);
   }
 }
 module.exports = ValidationUtils;

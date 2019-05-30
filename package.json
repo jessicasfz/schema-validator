@@ -12,6 +12,8 @@
   "dependencies": {
     "ajv": "^6.10.0",
     "jest": "^24.8.0",
+    "date-and-time": "^0.6.3",
+    "dateformat": "^3.0.3",
     "jsonschema": "^1.2.4",
     "moment": "^2.24.0"
   }

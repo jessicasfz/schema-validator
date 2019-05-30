@@ -24,9 +24,7 @@ class SingleError {
         };
     }
     toString(){
-        return JSON.stringify({
-            message:this.message
-        });
+        return JSON.stringify(this.toJSON());
     }
 }
 

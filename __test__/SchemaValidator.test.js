@@ -36,6 +36,18 @@ var schema = {
             'minLength': 1,
             'maxLength': 20
         }
+    },
+    {
+        'name': 'time',
+        'title': 'Date of transaction',
+        'constraints': {
+            'required': true,
+            'type': 'time',
+            'pattern': 'hh:mm:ss',
+            'nullable': false,
+            'minLength': 1,
+            'maxLength': 20
+        }
     }
     ]
 };
