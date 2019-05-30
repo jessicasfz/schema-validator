@@ -1,105 +1,139 @@
-const dataTypes = require('./Datatypes')
+const dataTypes = require('./Datatypes');
 let moment = require('moment');
 var Ajv = require('ajv');
 let dateTimeFormat = require('date-and-time');
 var validSchema = require('./config/schema-config.json');
-const SingleError = require('./SingleError')
+const SingleError = require('./SingleError');
 class ValidationUtils {
 	/**
    * @param {*} schema  -- Schema supplied by user 
    * @description  validayes Schema 
    */
-  static validateSchema(schema) {
-    let schemaValidator = new Ajv({ allErrors: true });
-    let result = schemaValidator.validate(validSchema, schema);
-    if (!result) {
-      if (schemaValidator.errors && schemaValidator.errors.length > 0) {
-        if (schemaValidator.errors.length > 0) {
-          throw new Error("Invalid Schema : Error Found :::" + JSON.stringify(schemaValidator.errors));
-        }
-      }
-    }
-    return true;
-  }
+	static validateSchema(schema) {
+		let schemaValidator = new Ajv({ allErrors: true });
+		let result = schemaValidator.validate(validSchema, schema);
+		if (!result) {
+			if (schemaValidator.errors && schemaValidator.errors.length > 0) {
+				if (schemaValidator.errors.length > 0) {
+					throw new Error('Invalid Schema : Error Found :::' + JSON.stringify(schemaValidator.errors));
+				}
+			}
+		}
+		return true;
+	}
 
-  static valdiateData(data, fieldConstraint) {
-    //console.log("Constraint = "+JSON.stringify(fieldConstraint));
-    var dataType = dataTypes[fieldConstraint.constraints.type];
-    //console.log(dataType)
+	static valdiateData(data, fieldConstraint) {
+		//console.log("Constraint = "+JSON.stringify(fieldConstraint));
+		var dataType = dataTypes[fieldConstraint.constraints.type];
+		//console.log(dataType)
 
-    let singleValueSchema = dataType;
-    let schemaValidator = new Ajv({ allErrors: true });
-    if ("date" === fieldConstraint.constraints.type) {
-      let date = moment(data, fieldConstraint.constraints.pattern);
-      //  console.log("Validating Date format =" + date.isValid());
-      if (!date.isValid()) {
-        return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
-          fieldConstraint.constraints.type, data);
-      }
-    } else if ("string" === fieldConstraint.constraints.type) {
-      if (fieldConstraint.constraints.maxLength > 0) {
-        singleValueSchema.maxLength = fieldConstraint.constraints.maxLength;
-      }
-      if (fieldConstraint.constraints.minLength > 0) {
-        singleValueSchema.minLength = fieldConstraint.constraints.minLength;
-      }
-      if (fieldConstraint.constraints.pattern.trim().length > 0) {
-        singleValueSchema.pattern = fieldConstraint.constraints.pattern;
-      }
-      let result = schemaValidator.validate(singleValueSchema, data);
-      if (!result) {
-        console.log(schemaValidator.errors);
+		let singleValueSchema = dataType;
+		let schemaValidator = new Ajv({ allErrors: true });
+		if ('date' === fieldConstraint.constraints.type) {
+			let date = moment(data, fieldConstraint.constraints.pattern);
+			//  console.log("Validating Date format =" + date.isValid());
+			if (!date.isValid()) {
+				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
+					fieldConstraint.constraints.type, data);
+			}
+		} else if ('string' === fieldConstraint.constraints.type) {
+			if (fieldConstraint.constraints.maxLength > 0) {
+				singleValueSchema.maxLength = fieldConstraint.constraints.maxLength;
+			}
+			if (fieldConstraint.constraints.minLength > 0) {
+				singleValueSchema.minLength = fieldConstraint.constraints.minLength;
+			}
+			if (fieldConstraint.constraints.pattern.length > 0) {
+				singleValueSchema.pattern = fieldConstraint.constraints.pattern;
+			}
+			let result = schemaValidator.validate(singleValueSchema, data);
+			if (!result) {
+				console.log(schemaValidator.errors);
 
-        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
-      }
-    }
-    else if ("time" == fieldConstraint.constraints.type) {
-      var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern);
-      if (!date) {  
-        return new SingleError(fieldConstraint.constraints.type + " is not valid for " + data + " in pattern: " + fieldConstraint.constraints.pattern,
-          fieldConstraint.constraints.type, data);
-      }
-    }
-    else if ("number" === fieldConstraint.constraints.type) {
-      let result = schemaValidator.validate(singleValueSchema, data);
-      if (!result) {
-        // console.log(schemaValidator.errors);
-        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
-      }
-    }
-    else {
-      let result = schemaValidator.validate(singleValueSchema, data);
-      if (!result) {
-        // console.log(schemaValidator.errors);
-        return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
-      }
-    }
-    return true;
-  }
+				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
+			}
+		}
+		else if ('time' == fieldConstraint.constraints.type) {
+			var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern);
 
-  /**
+			if (!date) {
+				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
+					fieldConstraint.constraints.type, data);
+			}
+		}
+		else if ('number' === fieldConstraint.constraints.type) {
+			let length = undefined;
+			let decimals = undefined;
+
+			let result = schemaValidator.validate(singleValueSchema, data);
+			if (!result) {
+				// console.log(schemaValidator.errors);
+				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
+			}
+			else {
+				// Do validation here for decimal 
+				if (fieldConstraint.constraints.pattern.length > 0) {
+					var decimalPrecison = fieldConstraint.constraints.pattern.split(',');
+					length = decimalPrecison[0];
+					decimals = decimalPrecison[1];
+					var strValue = data.toString();
+					console.log(new String(data));
+					var parts = strValue.split('.');
+					console.log(parts);
+					var errMsg = [];
+					if (strValue.length > length) {
+						// Length Condition failed 
+						errMsg.push({
+							message: 'Length of ' + data + ' greater than ' + length
+						});
+					}
+					if(parts[1]){
+						// Decimal Found then 
+						if(parts[1].length> decimals){
+							errMsg.push({
+								message: 'decimal places of ' + data + ' greater than ' + decimals
+							});
+						}
+					}
+					if(errMsg.length > 0 ){
+						return new SingleError(this.getAllErrorObject(errMsg), fieldConstraint.constraints.type, data);
+					}
+				}
+			}
+		}
+		else {
+			let result = schemaValidator.validate(singleValueSchema, data);
+			if (!result) {
+				// console.log(schemaValidator.errors);
+				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
+			}
+		}
+		return true;
+	}
+
+	/**
    * This is a Utility Function that 
    * @param {*} schema -- JSD according to drafts generated by <http://jsonschema.net>
    * @param {*} valueJSON -- json for which above schema is presenst 
    */
-  static validateSchemaForJSD(schema, valueJSON) {
-    let schemaValidator = new Ajv({ allErrors: true });
-    var check = schemaValidator.validate(schema, valueJSON);
-    return {
-      status: check,
-      errors: schemaValidator.errors
-    }
-  }
+	static validateSchemaForJSD(schema, valueJSON) {
+		let schemaValidator = new Ajv({ allErrors: true });
+		var check = schemaValidator.validate(schema, valueJSON);
+		return {
+			status: check,
+			errors: schemaValidator.errors
+		};
+	}
 
-  static getAllErrorObject(errors) {
-    var errString = [];
-    for (var i = 0; i < errors.length; i++) {
-      errString.push(errors[i].message) ;
-    }
-    if(1 === errors.length ){
-      return errString[0];
-    }
-    return JSON.stringify(errString);
-  }
+	static getAllErrorObject(errors) {
+		var errString = [];
+		for (var i = 0; i < errors.length; i++) {
+			errString.push(errors[i].message);
+		}
+		if (1 === errors.length) {
+			return errString[0];
+		}
+		return JSON.stringify(errString);
+	}
 }
 module.exports = ValidationUtils;
