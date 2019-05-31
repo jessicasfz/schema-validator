@@ -11,9 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "^6.10.0",
-    "jest": "^24.8.0",
+    "chai": "^4.2.0",
+    "chai-json-schema": "^1.5.1",
+    "chai-json-schema-ajv": "^4.0.0",
     "date-and-time": "^0.6.3",
     "dateformat": "^3.0.3",
+    "jest": "^24.8.0",
     "jsonschema": "^1.2.4",
     "moment": "^2.24.0"
   }
