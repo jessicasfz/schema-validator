@@ -14,9 +14,9 @@ var schema = {
         'constraints': {
             'required': true,
             'type': 'string',
-            'pattern': '[abc]+',
+            'pattern': '[a-z]+',
             'nullable': false,
-            'minLength': 2,
+            'minLength': 3,
             'maxLength': 3
         }
     }, {
@@ -25,9 +25,9 @@ var schema = {
         'constraints': {
             'required': true,
             'type': 'number',
-            'pattern': '^(\\d{1,20}|(\\d{1,20}\\.{1}\\d{1,5}){1})',
+            'pattern': '10,3',
             'nullable': false,
-            'minLength': 1,
+            'minLength': 2,
             'maxLength': 20
         }
     },
@@ -103,7 +103,7 @@ describe('To verify the test cases for Currency Object ',function(){
 /**
  * For Rates
  */
-describe.only('To verify the test cases for Rates Object ',function(){
+describe('To verify the test cases for Rates Object ',function(){
     it("Negative  test case to check status is false when rates datatype is string",function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate(["abc","ahsd","01/01/2020"])
@@ -123,7 +123,7 @@ describe.only('To verify the test cases for Rates Object ',function(){
     })
     it('Negative Test case to check for min length for Rates object',function(){
         let validtor = new SchemaValidator(schema);
-        var result = validtor.validate(['abc',0,"11/11/2011"])
+        var result = validtor.validate(["abc",,"11/11/2011"])
         var resultstatus = result.status 
         console.log(resultstatus)
         expect(resultstatus).to.be.false
