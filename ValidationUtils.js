@@ -23,15 +23,14 @@ class ValidationUtils {
 	}
 
 	static valdiateData(data, fieldConstraint) {
-		//console.log("Constraint = "+JSON.stringify(fieldConstraint));
+	
 		var dataType = dataTypes[fieldConstraint.constraints.type];
-		//console.log(dataType)
+	
 
 		let singleValueSchema = dataType;
 		let schemaValidator = new Ajv({ allErrors: true });
 		if ('date' === fieldConstraint.constraints.type) {
 			let date = moment(data, fieldConstraint.constraints.pattern);
-			//  console.log("Validating Date format =" + date.isValid());
 			if (!date.isValid()) {
 				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
 					fieldConstraint.constraints.type, data);
@@ -48,8 +47,6 @@ class ValidationUtils {
 			}
 			let result = schemaValidator.validate(singleValueSchema, data);
 			if (!result) {
-				console.log(schemaValidator.errors);
-
 				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
 			}
 		}
@@ -67,7 +64,6 @@ class ValidationUtils {
 
 			let result = schemaValidator.validate(singleValueSchema, data);
 			if (!result) {
-				// console.log(schemaValidator.errors);
 				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
 			}
 			else {
@@ -77,9 +73,7 @@ class ValidationUtils {
 					length = decimalPrecison[0];
 					decimals = decimalPrecison[1];
 					var strValue = data.toString();
-					console.log(new String(data));
 					var parts = strValue.split('.');
-					console.log(parts);
 					var errMsg = [];
 					if (strValue.length > length) {
 						// Length Condition failed 
@@ -104,7 +98,6 @@ class ValidationUtils {
 		else {
 			let result = schemaValidator.validate(singleValueSchema, data);
 			if (!result) {
-				// console.log(schemaValidator.errors);
 				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
 			}
 		}

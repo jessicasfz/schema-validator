@@ -30,8 +30,6 @@ class SchemaValidator {
 			reasons: []
 		};
 		try {
-			console.log('Data Length = ' + arr.length);
-			console.log('Fields  Length = ' + this.schema.fields.length);
 			if (this.schema.fields.length != arr.length) {
 				response.status = false;
 				response.reasons.push({ message: 'Invalid Record Length with schema ' });
@@ -44,17 +42,15 @@ class SchemaValidator {
 				var validationData = this.schema.fields[i];
 				var result = ValidationUtils.valdiateData(singleValue, validationData);
 				if( result instanceof SingleError){
-					console.log('Single error Found ');
+					
 					response.status = false;
-					console.log(result.toJSON());
-					//result.message
 					response.reasons.push(result.toJSON());
 				}
 			}
 			// Validating each record over here 
 		}
 		catch (err) {
-			console.error('Error Found ', err);
+			// 
 		}
 		return response;
 		// This will return true or false 
