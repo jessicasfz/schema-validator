@@ -26,12 +26,13 @@ class SchemaValidator {
      */
 	validate(arr) {
 		var response = {
-			status: true,
-			reasons: []
+			isValid: true,
+			reasons: [],
+			validJsonObject:{}
 		};
 		try {
 			if (this.schema.fields.length != arr.length) {
-				response.status = false;
+				response.isValid = false;
 				response.reasons.push({ message: 'Invalid Record Length with schema ' });
 				return response;
 				//throw new Error("Invalid Record Length with schema ")
@@ -43,14 +44,21 @@ class SchemaValidator {
 				var result = ValidationUtils.valdiateData(singleValue, validationData);
 				if( result instanceof SingleError){
 					
-					response.status = false;
+					response.isValid = false;
 					response.reasons.push(result.toJSON());
+				}
+				else{
+					response.validJsonObject[validationData.name]= singleValue;	
 				}
 			}
 			// Validating each record over here 
 		}
 		catch (err) {
 			// 
+		}
+		if(!response.isValid)
+		{
+			response.validJsonObject = {};
 		}
 		return response;
 		// This will return true or false 
