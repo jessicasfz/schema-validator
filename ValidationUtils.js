@@ -113,8 +113,8 @@ class ValidationUtils {
 		let schemaValidator = new Ajv({ allErrors: true });
 		var check = schemaValidator.validate(schema, valueJSON);
 		return {
-			status: check,
-			errors: schemaValidator.errors
+			isValid: check,
+			reasons: schemaValidator.errors
 		};
 	}
 
