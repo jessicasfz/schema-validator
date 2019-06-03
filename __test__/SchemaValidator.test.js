@@ -64,7 +64,7 @@ describe('To verify the test cases for Currency Object ',function(){
     it("Positive test case to check status is true when input json is correct",function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate(["abc",0.87,"01/01/2020"])
-        var resultstatus = result.status 
+        var resultstatus = result.isValid 
         console.log(resultstatus)
         expect(resultstatus).to.be.true    
     })
@@ -73,7 +73,7 @@ describe('To verify the test cases for Currency Object ',function(){
     it(' Negative Test case to check for max length for Currency exceeded',function(){
          let validtor = new SchemaValidator(schema);
          var result = validtor.validate(["abci",0.87,"01/01/2020"])
-         var resultstatus = result.status 
+         var resultstatus = result.isValid 
          console.log(resultstatus)
          expect(resultstatus).to.be.false
         
@@ -82,7 +82,7 @@ describe('To verify the test cases for Currency Object ',function(){
     it('Negative Test case to check for min length for Currency object',function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate(['a',0.87,"01/01/2020"])
-        var resultstatus = result.status 
+        var resultstatus = result.isValid 
         console.log(resultstatus)
         expect(resultstatus).to.be.false
         
@@ -92,7 +92,7 @@ describe('To verify the test cases for Currency Object ',function(){
     it(' Test case to check for data type for Currency object',function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate([23,0.87,"01/01/2020"])
-        var resultstatus = result.status 
+        var resultstatus = result.isValid 
         console.log(resultstatus)
         expect(resultstatus).to.be.false
         
@@ -107,7 +107,7 @@ describe('To verify the test cases for Rates Object ',function(){
     it("Negative  test case to check status is false when rates datatype is string",function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate(["abc","ahsd","01/01/2020"])
-        var resultstatus = result.status 
+        var resultstatus = result.isValid 
         console.log('Datatype issue',+resultstatus)
         expect(resultstatus).to.be.false    
     })
@@ -116,7 +116,7 @@ describe('To verify the test cases for Rates Object ',function(){
     it(' Negative Test case to check for max length for Rates exceeded',function(){
          let validtor = new SchemaValidator(schema);
          var result = validtor.validate(["abc",1234565754756777676767767667777766676767,"11/11/2011"])
-         var resultstatus = result.status 
+         var resultstatus = result.isValid 
          expect(resultstatus).to.be.false
         
 
@@ -124,7 +124,7 @@ describe('To verify the test cases for Rates Object ',function(){
     it('Negative Test case to check for min length for Rates object',function(){
         let validtor = new SchemaValidator(schema);
         var result = validtor.validate(["abc",,"11/11/2011"])
-        var resultstatus = result.status 
+        var resultstatus = result.isValid 
         console.log(resultstatus)
         expect(resultstatus).to.be.false
         
