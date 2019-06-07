@@ -1,5 +1,4 @@
 const dataTypes = require('./Datatypes');
-let moment = require('moment');
 var Ajv = require('ajv');
 let dateTimeFormat = require('date-and-time');
 var validSchema = require('./config/schema-config.json');
@@ -21,17 +20,18 @@ class ValidationUtils {
 		}
 		return true;
 	}
-
+	/**
+	 * 
+	 * @param {*} data 
+	 * @param {*} fieldConstraint 
+	 */
 	static valdiateData(data, fieldConstraint) {
-	
 		var dataType = dataTypes[fieldConstraint.constraints.type];
-	
-
 		let singleValueSchema = dataType;
 		let schemaValidator = new Ajv({ allErrors: true });
-		if ('date' === fieldConstraint.constraints.type) {
-			let date = moment(data, fieldConstraint.constraints.pattern);
-			if (!date.isValid()) {
+		if ('date' === fieldConstraint.constraints.type  || 'time' === fieldConstraint.constraints.type) {
+			var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern,true);
+			if (!date) {
 				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
 					fieldConstraint.constraints.type, data);
 			}
@@ -48,14 +48,6 @@ class ValidationUtils {
 			let result = schemaValidator.validate(singleValueSchema, data);
 			if (!result) {
 				return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
-			}
-		}
-		else if ('time' == fieldConstraint.constraints.type) {
-			var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern);
-
-			if (!date) {
-				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
-					fieldConstraint.constraints.type, data);
 			}
 		}
 		else if ('number' === fieldConstraint.constraints.type) {

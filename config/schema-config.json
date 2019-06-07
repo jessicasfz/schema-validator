@@ -1,120 +1,269 @@
-{
-    "definitions": {},
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://example.com/root.json",
-    "type": "object",
-    "title": "The Root Schema",
-    "required": [
-      "fields"
-    ],
-    "properties": {
-      "fields": {
-        "$id": "#/properties/fields",
-        "type": "array",
-        "title": "The Fields Schema",
-        "items": {
-          "$id": "#/properties/fields/items",
-          "type": "object",
-          "title": "The Items Schema",
-          "required": [
-            "name",
-            "title",
-            "constraints"
-          ],
-          "properties": {
-            "name": {
-              "$id": "#/properties/fields/items/properties/name",
-              "type": "string",
-              "title": "The Name Schema",
-              "default": "",
-              "examples": [
-                "Currency"
-              ],
-              "pattern": "^(.*)$"
-            },
-            "title": {
-              "$id": "#/properties/fields/items/properties/title",
-              "type": "string",
-              "title": "The Title Schema",
-              "default": "",
-              "examples": [
-                "currency abbreviation"
-              ],
-              "pattern": "^(.*)$"
-            },
-            "constraints": {
-              "$id": "#/properties/fields/items/properties/constraints",
-              "type": "object",
-              "title": "The Constraints Schema",
-              "required": [
-                "required",
-                "type",
-                "pattern",
-                "nullable",
-                "minLength",
-                "maxLength"
-              ],
-              "properties": {
-                "required": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/required",
-                  "type": "boolean",
-                  "title": "The Required Schema",
-                  "default": false,
-                  "examples": [
-                    true
-                  ]
-                },
-                "type": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/type",
-                  "enum": ["string","number","integer","date","time","date-time","email","boolean"],
-                  "title": "The Type Schema",
-                  "default": "",
-                  "examples": [
-                    "string"
-                  ],
-                  "pattern": "^(.*)$"
-                },
-                "pattern": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/pattern",
-                  "type": "string",
-                  "title": "The Pattern Schema",
-                  "default": "",
-                  "examples": [
-                    "[a-zA-Z]*"
-                  ],
-                  "pattern": "^(.*)$"
-                },
-                "nullable": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/nullable",
-                  "type": "boolean",
-                  "title": "The Nullable Schema",
-                  "default": false,
-                  "examples": [
-                    false
-                  ]
-                },
-                "minLength": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/minLength",
-                  "type": "integer",
-                  "title": "The Minlength Schema",
-                  "default": 0,
-                  "examples": [
-                    3
-                  ]
-                },
-                "maxLength": {
-                  "$id": "#/properties/fields/items/properties/constraints/properties/maxLength",
-                  "type": "integer",
-                  "title": "The Maxlength Schema",
-                  "default": 0,
-                  "examples": [
-                    3
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+1 {
+  2   "definitions": {},
+  3   "$schema": "http://json-schema.org/draft-07/schema#",
+  4   "$id": "http://example.com/root.json",
+  5   "type": "object",
+  6   "title": "The Root Schema",
+  7   "required": [
+  8     "body",
+  9     "trailer"
+ 10   ],
+ 11   "properties": {
+ 12     "body": {
+ 13       "$id": "#/properties/body",
+ 14       "type": "object",
+ 15       "title": "The Body Schema",
+ 16       "required": [
+ 17         "fields"
+ 18       ],
+ 19       "properties": {
+ 20         "fields": {
+ 21           "$id": "#/properties/body/properties/fields",
+ 22           "type": "array",
+ 23           "title": "The Fields Schema",
+ 24           "items": {
+ 25             "$id": "#/properties/body/properties/fields/items",
+ 26             "type": "object",
+ 27             "title": "The Items Schema",
+ 28             "required": [
+ 29               "name",
+ 30               "title",
+ 31               "constraints"
+ 32             ],
+ 33             "properties": {
+ 34               "name": {
+ 35                 "$id": "#/properties/body/properties/fields/items/properties/name",
+ 36                 "type": "string",
+ 37                 "title": "The Name Schema",
+ 38                 "default": "",
+ 39                 "examples": [
+ 40                   "firstname"
+ 41                 ],
+ 42                 "pattern": "^(.*)$"
+ 43               },
+ 44               "title": {
+ 45                 "$id": "#/properties/body/properties/fields/items/properties/title",
+ 46                 "type": "string",
+ 47                 "title": "The Title Schema",
+ 48                 "default": "",
+ 49                 "examples": [
+ 50                   "First name of customer"
+ 51                 ],
+ 52                 "pattern": "^(.*)$"
+ 53               },
+ 54               "constraints": {
+ 55                 "$id": "#/properties/body/properties/fields/items/properties/constraints",
+ 56                 "type": "object",
+ 57                 "title": "The Constraints Schema",
+ 58                 "required": [
+ 59                   "required",
+ 60                   "type",
+ 61                   "pattern",
+ 62                   "nullable",
+ 63                   "minLength",
+ 64                   "maxLength",
+ 65                   "unique"
+ 66                 ],
+ 67                 "properties": {
+ 68                   "required": {
+ 69                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/required",
+ 70                     "type": "boolean",
+ 71                     "title": "The Required Schema",
+ 72                     "default": false,
+ 73                     "examples": [
+ 74                       true
+ 75                     ]
+ 76                   },
+ 77                   "type": {
+ 78                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/type",
+ 79                     "enum": ["string","number","integer","date","time","date-time","boolean"],
+ 80                     "title": "The Type Schema",
+ 81                     "default": "",
+ 82                     "examples": [
+ 83                       "string"
+ 84                     ],
+ 85                     "pattern": "^(.*)$"
+ 86                   },
+ 87                   "pattern": {
+ 88                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/pattern",
+ 89                     "type": "string",
+ 90                     "title": "The Pattern Schema",
+ 91                     "default": "",
+ 92                     "examples": [
+ 93                       "regex pattern for only letters"
+ 94                     ],
+ 95                     "pattern": "^(.*)$"
+ 96                   },
+ 97                   "nullable": {
+ 98                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/nullable",
+ 99                     "type": "boolean",
+100                     "title": "The Nullable Schema",
+101                     "default": false,
+102                     "examples": [
+103                       false
+104                     ]
+105                   },
+106                   "minLength": {
+107                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/minLength",
+108                     "type": "integer",
+109                     "title": "The Minlength Schema",
+110                     "default": 0,
+111                     "examples": [
+112                       3
+113                     ]
+114                   },
+115                   "maxLength": {
+116                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/maxLength",
+117                     "type": "integer",
+118                     "title": "The Maxlength Schema",
+119                     "default": 0,
+120                     "examples": [
+121                       15
+122                     ]
+123                   },
+124                   "unique": {
+125                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/unique",
+126                     "type": "boolean",
+127                     "title": "The Unique Schema",
+128                     "default": false,
+129                     "examples": [
+130                       true
+131                     ]
+132                   }
+133                 }
+134               }
+135             }
+136           }
+137         }
+138       }
+139     },
+140     "trailer": {
+141       "$id": "#/properties/trailer",
+142       "type": "object",
+143       "title": "The Trailer Schema",
+144       "required": [
+145         "fields"
+146       ],
+147       "properties": {
+148         "fields": {
+149           "$id": "#/properties/trailer/properties/fields",
+150           "type": "array",
+151           "title": "The Fields Schema",
+152           "items": {
+153             "$id": "#/properties/trailer/properties/fields/items",
+154             "type": "object",
+155             "title": "The Items Schema",
+156             "required": [
+157               "name",
+158               "title",
+159               "constraints"
+160             ],
+161             "properties": {
+162               "name": {
+163                 "$id": "#/properties/trailer/properties/fields/items/properties/name",
+164                 "type": "string",
+165                 "title": "The Name Schema",
+166                 "default": "",
+167                 "examples": [
+168                   "totalRecords"
+169                 ],
+170                 "pattern": "^(.*)$"
+171               },
+172               "title": {
+173                 "$id": "#/properties/trailer/properties/fields/items/properties/title",
+174                 "type": "string",
+175                 "title": "The Title Schema",
+176                 "default": "",
+177                 "examples": [
+178                   "Total number of records in file"
+179                 ],
+180                 "pattern": "^(.*)$"
+181               },
+182               "constraints": {
+183                 "$id": "#/properties/trailer/properties/fields/items/properties/constraints",
+184                 "type": "object",
+185                 "title": "The Constraints Schema",
+186                 "required": [
+187                   "required",
+188                   "type",
+189                   "pattern",
+190                   "nullable",
+191                   "minLength",
+192                   "maxLength",
+193                   "unique"
+194                 ],
+195                 "properties": {
+196                   "required": {
+197                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/required",
+198                     "type": "boolean",
+199                     "title": "The Required Schema",
+200                     "default": false,
+201                     "examples": [
+202                       true
+203                     ]
+204                   },
+205                   "type": {
+206                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/type",
+207                     "enum": ["string","number","integer","date","time","date-time","boolean"],
+208                     "title": "The Type Schema",
+209                     "default": "",
+210                     "examples": [
+211                       "integer"
+212                     ],
+213                     "pattern": "^(.*)$"
+214                   },
+215                   "pattern": {
+216                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/pattern",
+217                     "type": "string",
+218                     "title": "The Pattern Schema",
+219                     "default": "",
+220                     "examples": [
+221                       "date Pattern"
+222                     ],
+223                     "pattern": "^(.*)$"
+224                   },
+225                   "nullable": {
+226                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/nullable",
+227                     "type": "boolean",
+228                     "title": "The Nullable Schema",
+229                     "default": false,
+230                     "examples": [
+231                       false
+232                     ]
+233                   },
+234                   "minLength": {
+235                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/minLength",
+236                     "type": "integer",
+237                     "title": "The Minlength Schema",
+238                     "default": 0,
+239                     "examples": [
+240                       0
+241                     ]
+242                   },
+243                   "maxLength": {
+244                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/maxLength",
+245                     "type": "integer",
+246                     "title": "The Maxlength Schema",
+247                     "default": 0,
+248                     "examples": [
+249                       100
+250                     ]
+251                   },
+252                   "unique": {
+253                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/unique",
+254                     "type": "boolean",
+255                     "title": "The Unique Schema",
+256                     "default": false,
+257                     "examples": [
+258                       true
+259                     ]
+260                   }
+261                 }
+262               }
+263             }
+264           }
+265         }
+266       }
+267     }
+268   }
+269 }
