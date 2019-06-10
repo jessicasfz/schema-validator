@@ -28,9 +28,12 @@ class ValidationUtils {
 	static valdiateData(data, fieldConstraint) {
 		var dataType = dataTypes[fieldConstraint.constraints.type];
 		let singleValueSchema = dataType;
+		if (!fieldConstraint.constraints.required && !data) {
+			return true;
+		}
 		let schemaValidator = new Ajv({ allErrors: true });
-		if ('date' === fieldConstraint.constraints.type  || 'time' === fieldConstraint.constraints.type) {
-			var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern,true);
+		if ('date' === fieldConstraint.constraints.type || 'time' === fieldConstraint.constraints.type || 'date-time' === fieldConstraint.constraints.type) {
+			var date = dateTimeFormat.parse(data, fieldConstraint.constraints.pattern, true);
 			if (!date) {
 				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data + ' in pattern: ' + fieldConstraint.constraints.pattern,
 					fieldConstraint.constraints.type, data);
@@ -73,15 +76,15 @@ class ValidationUtils {
 							message: 'Length of ' + data + ' greater than ' + length
 						});
 					}
-					if(parts[1]){
+					if (parts[1]) {
 						// Decimal Found then 
-						if(parts[1].length> decimals){
+						if (parts[1].length > decimals) {
 							errMsg.push({
 								message: 'decimal places of ' + data + ' greater than ' + decimals
 							});
 						}
 					}
-					if(errMsg.length > 0 ){
+					if (errMsg.length > 0) {
 						return new SingleError(this.getAllErrorObject(errMsg), fieldConstraint.constraints.type, data);
 					}
 				}
@@ -119,6 +122,19 @@ class ValidationUtils {
 			return errString[0];
 		}
 		return JSON.stringify(errString);
+	}
+
+	static isValueUnique(value, arr, type) {
+		const firstIndex = arr.indexOf(value);
+		const lastIndex = arr.lastIndexOf(value);
+		if (firstIndex !== lastIndex) {
+			// Duplicate 
+			return new SingleError(value + ' is not unique ',
+				type, value);
+		}
+		else {
+			return true;
+		}
 	}
 }
 module.exports = ValidationUtils;

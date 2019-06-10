@@ -45,7 +45,12 @@ class SchemaValidator {
 			for (var i = 0; i < arr.length; i++) {
 				var singleValue = arr[i];
 				var validationData = toCheckSchema.fields[i];
+				
 				var result = ValidationUtils.valdiateData(singleValue, validationData);
+				if(validationData.constraints.unique){
+					// Checking if the value is unique in row 
+					result = ValidationUtils.isValueUnique(singleValue, arr,validationData.constraints.type);
+				}
 				if( result instanceof SingleError){
 					response.isValid = false;
 					response.reasons.push(result.toJSON());
@@ -57,7 +62,8 @@ class SchemaValidator {
 			// Validating each record over here 
 		}
 		catch (err) {
-			// 
+			console.error('Error  cauth ',err);
+			
 		}
 		// if(!response.isValid)
 		// {
