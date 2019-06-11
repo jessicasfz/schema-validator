@@ -12,7 +12,12 @@ class SchemaValidator {
 	constructor(schema) {
 		const isValidSchema = ValidationUtils.validateSchema(schema);
 		if (isValidSchema) {
-			_schema = schema;
+			if(schema.body || schema.trailer )
+				_schema = schema;
+			else{
+				// Error Thrown here as any of the aove is absolutely necessary 
+				throw new Error('Body or trailer not found ');
+			}
 		}
 	}
 
