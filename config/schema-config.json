@@ -71,7 +71,7 @@
                   },
                   "type": {
                     "$id": "#/properties/body/properties/fields/items/properties/constraints/properties/type",
-                    "type": "string",
+                    "enum": ["string","number","integer","date","time","date-time","boolean"],
                     "title": "The Type Schema",
                     "default": "",
                     "examples": [
@@ -189,7 +189,7 @@
                   },
                   "type": {
                     "$id": "#/properties/trailer/properties/fields/items/properties/constraints/properties/type",
-                    "type": "string",
+                    "enum": ["string","number","integer","date","time","date-time","boolean"],
                     "title": "The Type Schema",
                     "default": "",
                     "examples": [
