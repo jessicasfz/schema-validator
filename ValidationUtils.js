@@ -54,53 +54,60 @@ class ValidationUtils {
 			}
 		}
 		else if ('number' === fieldConstraint.constraints.type) {
-			//let length = undefined;
-			//let decimals = undefined;
+			let length = undefined;
+			let decimals = undefined;
 			let value = Number(data);
-			if(!value){
-				return new SingleError(data + ' is invalid value for  datatype ' + fieldConstraint.constraints.type ,
+			if (!value) {
+				return new SingleError(data + ' is invalid value for  datatype ' + fieldConstraint.constraints.type,
 					fieldConstraint.constraints.type, data);
 			}
+			if (fieldConstraint.constraints.pattern.length > 0) {
+				var decimalPrecison = fieldConstraint.constraints.pattern.split(',');
+				length = decimalPrecison[0];
+				decimals = decimalPrecison[1];
+				var strValue = value.toString();
+				var parts = strValue.split('.');
+				var errMsg = [];
+				if ( strValue.length > (length + 1) ) {
+					// Length Condition failed 
+					errMsg.push({
+						message: 'Length of ' + data + ' greater than ' + length
+					});
+				}
+				if(parts[0] && parts[0].length > (length-decimals)){
+					errMsg.push({
+						message: 'decimal places of ' + data + ' greater than ' + decimals
+					});
+				}
+				if (parts[1]) {
+					// Decimal Found then 
+					if (parts[1].length > decimals) {
+						errMsg.push({
+							message: 'decimal places of ' + data + ' greater than ' + decimals
+						});
+					}
+				}
+				if (errMsg.length > 0) {
+					return new SingleError(this.getAllErrorObject(errMsg), fieldConstraint.constraints.type, data);
+				}
+			}
+
 			// let result = schemaValidator.validate(singleValueSchema, data);
 			// if (!result) {
 			// 	return new SingleError(this.getAllErrorObject(schemaValidator.errors), fieldConstraint.constraints.type, data);
 			// }
 			// else {
 			// 	// Do validation here for decimal 
-			// 	if (fieldConstraint.constraints.pattern.length > 0) {
-			// 		var decimalPrecison = fieldConstraint.constraints.pattern.split(',');
-			// 		length = decimalPrecison[0];
-			// 		decimals = decimalPrecison[1];
-			// 		var strValue = data.toString();
-			// 		var parts = strValue.split('.');
-			// 		var errMsg = [];
-			// 		if (strValue.length > length) {
-			// 			// Length Condition failed 
-			// 			errMsg.push({
-			// 				message: 'Length of ' + data + ' greater than ' + length
-			// 			});
-			// 		}
-			// 		if (parts[1]) {
-			// 			// Decimal Found then 
-			// 			if (parts[1].length > decimals) {
-			// 				errMsg.push({
-			// 					message: 'decimal places of ' + data + ' greater than ' + decimals
-			// 				});
-			// 			}
-			// 		}
-			// 		if (errMsg.length > 0) {
-			// 			return new SingleError(this.getAllErrorObject(errMsg), fieldConstraint.constraints.type, data);
-			// 		}
-			// 	}
+
 			// }
 		}
 		else if ('integer' === fieldConstraint.constraints.type) {
 			//
 			let value = parseInt(data);
-			if(!value){
-				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data ,
+			if (!value) {
+				return new SingleError(fieldConstraint.constraints.type + ' is not valid for ' + data,
 					fieldConstraint.constraints.type, data);
-			} 
+			}
 		} else {
 			let result = schemaValidator.validate(singleValueSchema, data);
 			if (!result) {
